@@ -1,0 +1,48 @@
+https://docs.djangoproject.com/en/3.2/intro/tutorial01/
+
+1.python3 -m venv ENV
+2.source path/ENV/bin/activate
+3.pip install --upgrade pip
+4.pip install django  //or specific django version OR pip install -r requirements.txt\n(after create requirements.txt)
+5.python -m django --version
+6.django-admin startproject myDjangoApp   
+7.cd myDjangoApp      
+8.python3 manage.py check  
+9.python3 manage.py makemigrations
+10.python3 manage.py migrate
+11.python manage.py runserver OR python manage.py runserver 8080  OR python manage.py runserver 0:8000
+12.python manage.py createsuperuser 
+
+
+https://docs.djangoproject.com/en/3.2/intro/tutorial01/
+
+#Creating the Polls app
+
+1.python manage.py startapp polls
+2.polls/views.py
+        from django.http import HttpResponse
+
+
+        def index(request):
+            return HttpResponse("Hello, world. You're at the polls index.")
+3.polls/urls.py
+        from django.urls import path
+
+        from . import views
+
+        urlpatterns = [
+            path('', views.index, name='index'),
+        ]
+4.mysite/urls.py
+        from django.contrib import admin
+        from django.urls import include, path
+
+        urlpatterns = [
+            path('polls/', include('polls.urls')),
+            path('admin/', admin.site.urls),
+        ]
+5.python manage.py runserver
+
+
+
+
