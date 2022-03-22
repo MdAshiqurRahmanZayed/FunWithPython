@@ -2,7 +2,6 @@ from tkinter import *
 import tkinter as tk
 from tkinter.filedialog import *
 
-
 #saveFile
 def saveFile():
      new_file = asksaveasfile(mode='w',filetypes=[('text files','.txt')])
