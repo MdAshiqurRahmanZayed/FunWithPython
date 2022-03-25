@@ -13,6 +13,15 @@ https://docs.djangoproject.com/en/3.2/intro/tutorial01/
 11.python manage.py runserver OR python manage.py runserver 8080  OR python manage.py runserver 0:8000
 12.python manage.py createsuperuser 
 
+  OR
+using mkvirtualenv
+1.mkvirtualenv venv_name
+2.mkvirtualenv -p python3.x venv_name
+3.workon venv_name
+4.deactivate(if we want to deactivate)
+5.repeat step 3 to 12
+
+
 
 https://docs.djangoproject.com/en/3.2/intro/tutorial01/
 
@@ -42,6 +51,32 @@ https://docs.djangoproject.com/en/3.2/intro/tutorial01/
             path('admin/', admin.site.urls),
         ]
 5.python manage.py runserver
+
+
+#load html css file
+
+1.create templates folder
+2.create static folder
+3.add project folder's urls.py
+        from django.urls import include, path
+        (adding urlpatterns)
+        path("", include("myapp.urls")),
+4.add mysite TEMPLATES
+        'DIRS': [BASE_DIR,'templates'],
+5.add lines after STATIC_URL = '/static/'
+        STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
+6.create style.css and style it
+7.create index.html in templates and lines
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+
+#if it works, we can add website templates
+
+1.move index.html and other html files to templates
+2.move all style components to static
+3.remove <link rel="stylesheet" href="{% static 'style.css' %}">
+4.add all links{% static 'path' %}
+
 
 
 
