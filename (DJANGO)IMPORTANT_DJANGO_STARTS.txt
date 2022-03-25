@@ -20,6 +20,7 @@ using mkvirtualenv
 3.workon venv_name
 4.deactivate(if we want to deactivate)
 5.repeat step 3 to 12
+6.lsvirtualenv -b  (if we want to know list of virtualenv)
 
 
 
