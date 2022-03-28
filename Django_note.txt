@@ -1,0 +1,222 @@
+https://docs.djangoproject.com/en/3.2/intro/tutorial01/
+
+1.python3 -m venv ENV
+2.source path/ENV/bin/activate
+3.pip install --upgrade pip
+4.pip install django  //or specific django version OR pip install -r requirements.txt\n(after create requirements.txt)
+5.python -m django --version
+6.django-admin startproject myDjangoApp   
+7.cd myDjangoApp      
+8.python3 manage.py check  
+9.python3 manage.py makemigrations
+10.python3 manage.py migrate
+11.python manage.py runserver OR python manage.py runserver 8080  OR python manage.py runserver 0:8000
+12.python manage.py createsuperuser 
+
+  OR
+using mkvirtualenv
+1.mkvirtualenv venv_name
+2.mkvirtualenv -p python3.x venv_name
+3.workon venv_name
+4.deactivate(if we want to deactivate)
+5.repeat step 3 to 12
+6.lsvirtualenv -b  (if we want to know list of virtualenv)
+
+
+https://docs.djangoproject.com/en/3.2/intro/tutorial01/
+
+#Creating the Polls app
+
+1.python manage.py startapp polls
+2.polls/views.py
+        from django.http import HttpResponse
+
+
+        def index(request):
+            return HttpResponse("Hello, world. You're at the polls index.")
+3.polls/urls.py
+        from django.urls import path
+
+        from . import views
+
+        urlpatterns = [
+            path('', views.index, name='index'),
+        ]
+4.mysite/urls.py
+        from django.contrib import admin
+        from django.urls import include, path
+
+        urlpatterns = [
+            path('polls/', include('polls.urls')),
+            path('admin/', admin.site.urls),
+        ]
+5.python manage.py runserver
+
+
+#load html css file
+
+1.create templates folder
+2.create static folder
+3.add project folder's urls.py
+        from django.urls import include, path
+        (adding urlpatterns)
+        path("", include("myapp.urls")),
+4.add mysite TEMPLATES
+        'DIRS': [BASE_DIR,'templates'],
+5.add lines after STATIC_URL = '/static/'
+        STATICFILES_DIRS = (os.path.join(BASE_DIR,'static'),)
+6.create style.css and style it
+7.create index.html in templates and lines
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'style.css' %}">
+
+#if it works, we can add website templates
+
+1.move index.html and other html files to templates
+2.move all style components to static
+3.remove <link rel="stylesheet" href="{% static 'style.css' %}">
+4.add all links{% static 'path' %}
+
+
+#django admin panel and manipulation data
+
+1.myapp -> models.py
+        class Feature(models.Model):
+                name = models.CharField(max_length=100)
+                details = models.CharField(max_length=500)
+2.settings.py -> INSTALLED_APPS ,add
+        'myapp'
+3.python manage.py makemigrations   (check)
+4.python manage.py migrate
+5.python manage.py createsuperuser
+6.log in admin panel
+7.add admin.py
+        from .models import Feature
+        admin.site.register(Feature)
+8.now we can able store data via admin panel
+
+#user registration in django
+1.create a link and register.html
+2.add register.html
+        <h1>Sign up bellow</h1>
+        <style>
+        h3{
+                color:red;
+        }
+        </style>
+        {% for message in messages %}
+        <h3>{{message}}</h3>
+        {% endfor %}
+
+
+        <form action="register" method="POST">
+        {% csrf_token %}
+        <p>Username:</p>
+        <input type="text" name="username"/>
+        <p>Email:</p>
+        <input type="email" name="email"/>
+        <p>Password:</p>
+        <input type="Password" name="password"/>
+        <p>Repeat Password:</p>
+        <input type="Password" name="password2"><br>
+        <input type="submit" value="submit">
+        </form>
+3.add views.py
+        from django.contrib.auth.models import User,auth
+        from django.contrib import messages
+        def register(request):
+        if request.method == 'POST':
+                username = request.POST['username']
+                email = request.POST['email']
+                password = request.POST['password']
+                password2 = request.POST['password2']
+                
+                if password==password2:
+                if User.objects.filter(email=email).exists():
+                        messages.info(request,"email already used")
+                        return redirect('register')
+                elif User.objects.filter(username=username).exists():
+                        messages.info(request,"username already used")
+                        return redirect('register')
+                else:
+                        user = User.objects.create_user(username=username,email=email,password=password)
+                        user.save()
+                        return redirect('login')
+                
+                else:
+                messages.info("Password not same")
+                return redirect(register)
+        else:   
+                return render(request,'register.html')
+#login 
+1.create a login url 
+2.create login.html add
+        <h1>Log in </h1>
+
+        <style>
+        h3{
+                color:red;
+        }
+        </style>
+        {% for message in messages %}
+        <h3>{{message}}</h3>
+        {% endfor %}
+        <form action="login" method="POST">
+        {% csrf_token %}
+        
+        <p>Username:</p>
+        <input type="text" name="username"/>
+        
+        <p>Password:</p>
+        <input type="Password" name="password"/>
+        <br>
+        <input type="submit" value="submit">
+
+        </form>
+
+3. views.py
+        def login(request):
+        if request.method =='POST':
+                username = request.POST['username']
+                password = request.POST['password']
+                
+                user = auth.authenticate(username = username,password= password)
+                if user is not  None:
+                auth.login(request,user)
+                return redirect('/')
+                else:
+                messages.info(request,'Credentials invalid')
+                return redirect('login')
+        else:
+                return render(request,"login.html")
+4.add index.html
+        {% if user.is_authenticated %}
+                        <a class="getstarted scrollto" href="logout">Log out</a>
+                {% else %}
+                <li>
+                        <a class="getstarted scrollto" href="login">Log in or Signup</a>
+                </li>
+                {% endif %}
+5.urls.py
+            path('logout',views.logout,name='logout'),
+6.views.py
+        def logout(request):
+                auth.logout(request)
+                return redirect('/')
+
+#dynamic url routing
+1.urls.py add
+        path('post/<str:pk>',views.post,name='post')
+2.views.py
+        def counter(request):
+                posts =[1,2,3,"tim","zayed"]
+                return render(request,'counter.html',{'posts':posts})
+
+        def post(request,pk):
+                return render(request,'post.html',{'pk':pk})
+3.post.html
+        <h1>the value is {{pk}}</h1>
+4.counter.html
+        {% for post in posts %}
+        <h1><a href="{%url 'post' post %}">posts</a></h1>
+        {% endfor %}
