@@ -9,7 +9,5 @@ print(translations)
 
 #using from textblob import TextBlob | pip install textblob
 text = TextBlob("Python is a strong language")
-text.translate(to='ar')
-text = TextBlob("Python is a strong language")
 translations = text.translate(to = 'ar')
 print(translations)
