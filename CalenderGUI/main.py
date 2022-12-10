@@ -6,7 +6,7 @@ def showCalender():
     gui = Tk()
     gui.config(background='#C2EDCE')
     gui.title("Calender for the year")
-    gui.geometry("950x900")
+    gui.geometry("1000x900")
     year =  int(myEntry.get())
     gui_content=  calendar.calendar(year)
     calYear = Label(gui,bg='#C2EDCE',fg="black", text= gui_content, font= "Consolas 15 bold")
